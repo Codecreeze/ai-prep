@@ -32,22 +32,26 @@ review (45 pts) — the Builder, practice mode, UX polish — comes after.
 - [x] Unit + integration tests against a local fixture site (31 tests total, all passing)
 → **checkpoint: commit "retrieval + crawler + search, SSRF-guarded, tested against local fixture"**
 
-### Phase 3 — LLM layer & generation
-- [ ] LLM client wrapper (provider call + rate-limit/backoff + JSON-repair retry)
-- [ ] `extractRequirements(jd)`
-- [ ] `generateBrief`, `generateQuestions(requirement, category)`, `generateFlashcards`
-- [ ] Prompt templates with explicit untrusted-content boundary (prompt-injection defense)
+### Phase 3 — LLM layer & generation (DONE)
+- [x] LLM client wrapper (provider call + rate-limit/backoff + JSON-repair retry)
+- [x] `extractRequirements(jd)`
+- [x] `generateBrief`, `generateQuestions(requirement, category)`, `generateFlashcards`
+- [x] Prompt templates with explicit untrusted-content boundary (prompt-injection defense)
+- [x] Live-tested against real Gemini API; caught and fixed a model-selection issue
+      (gemini-3.6-flash's free tier is 20 req/DAY, switched to gemini-3.5-flash-lite)
 → **checkpoint: commit "LLM client + generation functions, rate-limit safe"**
 
-### Phase 4 — Orchestrator + second pass + batch CLI
-- [ ] `pipeline/orchestrator.ts` — full sequence, calls Phase 1-3 pieces in order
-- [ ] Second-pass coverage loop (MAX_PASSES=2)
-- [ ] `scripts/evaluate.ts` — batch entry point, exact Appendix B I/O shape
-- [ ] Run against a sample `cases.json`, confirm 5 cases / 15 min budget, confirm
-      failure-continues-run behavior
+### Phase 4 — Orchestrator + second pass + batch CLI (DONE)
+- [x] `pipeline/orchestrator.ts` — full sequence, calls Phase 1-3 pieces in order
+- [x] Second-pass coverage loop (MAX_PASSES=2)
+- [x] `scripts/evaluate.ts` — batch entry point, exact Appendix B I/O shape
+- [x] Ran against a 3-case sample against a local fixture company site: 3/3 ok,
+      all validated, ~4.5 min (well within the 15 min/5-case budget)
+- [x] Confirmed failure-continues-run behavior (unreachable-company case still
+      produced an honest `ok` kit rather than a hard failure, per the brief)
 → **checkpoint: commit "pipeline orchestrator + batch evaluate command working end-to-end"**
-This is the single most important checkpoint — automated grading runs almost entirely
-against what Phase 1-4 produce.
+This was the single most important checkpoint — automated grading runs almost
+entirely against what Phase 1-4 produce. Done.
 
 ### Phase 5 — Auth + persistence + API
 - [ ] Mongoose models (`User`, `Kit`)

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "case-01-normal",
+    "jd": "Senior Backend Engineer\n\nWe are looking for a Senior Backend Engineer with 5+ years of experience with Node.js and PostgreSQL. Experience mentoring junior engineers is required. Bonus points for Kubernetes experience.",
+    "company_url": "http://localhost:8099/acme/",
+    "days": 5
+  },
+  {
+    "id": "case-02-thin-jd",
+    "jd": "Backend dev needed. Node.js.",
+    "company_url": "http://localhost:8099/acme/",
+    "days": 3
+  },
+  {
+    "id": "case-03-unreachable-company",
+    "jd": "Frontend Engineer with 3+ years of React experience required.",
+    "company_url": "http://localhost:1/nonexistent",
+    "days": 5
+  }
+]
