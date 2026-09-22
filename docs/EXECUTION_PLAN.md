@@ -24,12 +24,12 @@ review (45 pts) — the Builder, practice mode, UX polish — comes after.
 - [ ] Unit tests for all four (vitest)
 → **checkpoint: commit "deterministic core: schema, coverage, scheduler, SSRF guard + tests"**
 
-### Phase 2 — Retrieval & crawling
-- [ ] `fetchPage` (timeout, size/content-type cap, retry+backoff)
-- [ ] `robotsCheck`
-- [ ] `crawlCompanySite` + `rankLinks` (heuristic, no hardcoded path list)
-- [ ] `searchPublicDiscussion` (provider-abstracted, graceful "nothing found")
-- [ ] Unit + integration tests against a local fixture site
+### Phase 2 — Retrieval & crawling (DONE)
+- [x] `fetchPage` (timeout, size/content-type cap, retry+backoff)
+- [x] `robotsCheck`
+- [x] `crawlCompanySite` + `rankLinks` (heuristic, no hardcoded path list)
+- [x] `searchPublicDiscussion` (provider-abstracted, graceful "nothing found")
+- [x] Unit + integration tests against a local fixture site (31 tests total, all passing)
 → **checkpoint: commit "retrieval + crawler + search, SSRF-guarded, tested against local fixture"**
 
 ### Phase 3 — LLM layer & generation

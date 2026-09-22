@@ -10,3 +10,4 @@ entry must contain.
 | 02 | [02-coverage-and-scheduler.md](./02-coverage-and-scheduler.md) | Deterministic coverage-gap check and day-by-day schedule allocation |
 | 03 | [03-ssrf-guard.md](./03-ssrf-guard.md) | URL validator blocking private/loopback addresses, with a documented local-dev/batch opt-out |
 | 04 | [04-phase1-tests.md](./04-phase1-tests.md) | Vitest suite for schema validation, coverage check, scheduler, SSRF guard — 24 tests, all passing |
+| 05 | [05-retrieval-and-crawler.md](./05-retrieval-and-crawler.md) | fetchPage, robots.txt check, heuristic hiring-page discovery, public-discussion search — with tests (31 total, all passing) |
