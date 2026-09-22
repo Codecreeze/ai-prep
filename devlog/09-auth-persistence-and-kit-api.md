@@ -75,9 +75,8 @@ the whole (potentially large) kit document every few seconds while it generates)
   some Mongoose-level validation on write, but that's fine because every write path
   goes through `validateKit()` (Zod) before persisting — the validation already
   happens, just at the right layer instead of duplicated at two layers.
-- **Type-checked and unit-tested, but NOT live-tested against a real MongoDB
-  instance yet** — no `MONGODB_URI` configured at time of writing. `npx tsc --noEmit`
-  passes clean and `dedupeHash` (the one pure/testable piece here) has unit tests, but
-  the actual `POST /api/kits` → generate → `GET /api/kits/:id` round-trip needs a real
-  Atlas connection to verify. **NOT VERIFIED — pending `MONGODB_URI`.** Flagged
-  explicitly rather than assumed working, per the project's no-false-completion rule.
+- **Update:** live-verified once `MONGODB_URI` was provided — see
+  `devlog/10-live-db-verification-and-fixes.md` for the full round-trip test and two
+  real bugs it caught and fixed (a Windows DNS/SRV connection issue, and an
+  unawaited-promise issue with async kit generation). Both fixed before this phase
+  was called done.

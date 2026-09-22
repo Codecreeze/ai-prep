@@ -53,14 +53,17 @@ review (45 pts) — the Builder, practice mode, UX polish — comes after.
 This was the single most important checkpoint — automated grading runs almost
 entirely against what Phase 1-4 produce. Done.
 
-### Phase 5 — Auth + persistence + API (DONE, pending live DB verification)
+### Phase 5 — Auth + persistence + API (DONE)
 - [x] Mongoose models (`User`, `Kit`)
 - [x] Session auth (register/login/logout, HTTP-only JWT cookie, per-route guard)
 - [x] Kit API routes (create w/ dedupe, list, detail, status, delete) wired to the
       orchestrator running async with progress tracking
 - [x] `npx tsc --noEmit` clean, 46 tests passing
-- [ ] **NOT VERIFIED**: live round-trip against a real MongoDB instance — pending
-      `MONGODB_URI`. Will confirm once provided, before Phase 6 UI depends on it.
+- [x] Live-verified end-to-end against real MongoDB Atlas: register, login, create,
+      poll, fetch, list, delete, 401/404 negative cases — all correct
+- [x] Found and fixed 2 real bugs during live testing: Windows SRV-DNS connection
+      failure (switched to standard non-SRV connection string) and an unawaited-
+      promise bug in async generation (fixed with Next.js `after()`) — see devlog/10
 → **checkpoint: commit "auth + persistence + kit API routes"**
 
 ### Phase 6 — Builder UI

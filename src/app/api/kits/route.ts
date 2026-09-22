@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { z } from "zod";
 import { connectDb } from "@/server/persistence/db";
 import { Kit } from "@/server/persistence/models/Kit";
@@ -36,7 +36,10 @@ export async function POST(req: NextRequest) {
     dedupeHash,
   });
 
-  generateKitAsync(doc._id.toString(), { jd, companyUrl, days }); // not awaited — see generateKitAsync's doc comment
+  // after() (not a bare unawaited call) — Next.js can freeze/kill an unawaited
+  // promise once the response is sent, since the request's execution context ends
+  // with the handler return. after() keeps the runtime alive for this work instead.
+  after(() => generateKitAsync(doc._id.toString(), { jd, companyUrl, days }));
 
   return NextResponse.json({ kitId: doc._id.toString(), status: "pending" }, { status: 202 });
 }
