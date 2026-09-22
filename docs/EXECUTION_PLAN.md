@@ -53,11 +53,14 @@ review (45 pts) — the Builder, practice mode, UX polish — comes after.
 This was the single most important checkpoint — automated grading runs almost
 entirely against what Phase 1-4 produce. Done.
 
-### Phase 5 — Auth + persistence + API
-- [ ] Mongoose models (`User`, `Kit`)
-- [ ] Session auth (register/login/logout, HTTP-only cookie, protected-route middleware)
-- [ ] Kit API routes (create, list, detail, status, delete) wired to the orchestrator
-      running async with progress tracking
+### Phase 5 — Auth + persistence + API (DONE, pending live DB verification)
+- [x] Mongoose models (`User`, `Kit`)
+- [x] Session auth (register/login/logout, HTTP-only JWT cookie, per-route guard)
+- [x] Kit API routes (create w/ dedupe, list, detail, status, delete) wired to the
+      orchestrator running async with progress tracking
+- [x] `npx tsc --noEmit` clean, 46 tests passing
+- [ ] **NOT VERIFIED**: live round-trip against a real MongoDB instance — pending
+      `MONGODB_URI`. Will confirm once provided, before Phase 6 UI depends on it.
 → **checkpoint: commit "auth + persistence + kit API routes"**
 
 ### Phase 6 — Builder UI
