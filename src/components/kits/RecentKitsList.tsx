@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useListKitsQuery } from "@/lib/api/kitsApi";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const STATUS_TONE = { pending: "warning", ready: "success", failed: "danger" } as const;
 
@@ -31,22 +32,27 @@ export const RecentKitsList = () => {
         <p className="text-sm text-muted">No kits yet.</p>
       ) : (
         <ul className="flex flex-col gap-3">
-          {recent.map((kit) => (
-            <li key={kit._id}>
-              <Link href={`/dashboard/kits/${kit._id}`} className="flex items-center justify-between gap-3 group">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate group-hover:text-primary">
-                    {kit.kit?.source?.role || "Generating..."}
-                  </p>
-                  <p className="text-xs text-muted truncate">{kit.kit?.source?.company || kit.input.companyUrl}</p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xs text-muted">{timeAgo(kit.createdAt)}</span>
-                  <Badge tone={STATUS_TONE[kit.status]}>{kit.status}</Badge>
-                </div>
-              </Link>
-            </li>
-          ))}
+          {recent.map((kit) => {
+            const companyName = kit.kit?.source?.company;
+            return (
+            <ErrorBoundary key={kit._id} fallback={<li className="text-sm text-muted">Whoops! Something went wrong.</li>}>
+              <li>
+                <Link href={`/dashboard/kits/${kit._id}`} className="flex items-center justify-between gap-3 group">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate group-hover:text-primary">
+                      {kit.kit?.source?.role || "Generating..."}
+                    </p>
+                    <p className={`text-xs text-muted truncate ${companyName ? "capitalize" : ""}`}>{companyName || kit.input.companyUrl}</p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-xs text-muted">{timeAgo(kit.createdAt)}</span>
+                    <Badge tone={STATUS_TONE[kit.status]}>{kit.status}</Badge>
+                  </div>
+                </Link>
+              </li>
+            </ErrorBoundary>
+            );
+          })}
         </ul>
       )}
     </Card>

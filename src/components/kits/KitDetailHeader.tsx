@@ -14,7 +14,7 @@ export const KitDetailHeader = ({ kitId, status, source }: { kitId: string; stat
           <h1 className="text-2xl font-semibold text-foreground">{source?.role || "Generating kit..."}</h1>
           <Badge tone={STATUS_TONE[status]}>{status}</Badge>
         </div>
-        <p className="text-sm text-muted mt-1">{source?.company || source?.company_url}</p>
+        <p className={`text-sm text-muted mt-1 ${source?.company ? "capitalize" : ""}`}>{source?.company || source?.company_url}</p>
       </div>
       <Link href={`/dashboard/practice/${kitId}`}>
         <Button variant="secondary">Practice flashcards</Button>

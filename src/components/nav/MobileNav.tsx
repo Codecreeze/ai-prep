@@ -1,14 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BrainCircuit } from "lucide-react";
-
-const MenuIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-5"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" /></svg>
-);
+import { BrainCircuit, Menu } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/dashboard/analyze", label: "Analyze" },
@@ -21,6 +17,13 @@ export const MobileNav = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   return (
     <div className="md:hidden">
       <button
@@ -30,7 +33,7 @@ export const MobileNav = () => {
         title="Open navigation menu"
         className="size-8 grid place-items-center rounded-lg text-muted hover:text-foreground hover:bg-background"
       >
-        <MenuIcon />
+        <Menu className="size-5" />
       </button>
       {open && typeof document !== "undefined" && createPortal(
         <div className="fixed inset-0 z-40 flex">

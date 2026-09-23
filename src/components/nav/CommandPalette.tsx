@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import { Search, ArrowRight, X } from "lucide-react";
 import { useDebounce } from "@/lib/useDebounce";
 
 const NAV_ITEMS = [
@@ -11,20 +12,6 @@ const NAV_ITEMS = [
   { href: "/dashboard/analytics", label: "Analytics" },
   { href: "/dashboard/practice", label: "Practice" },
 ];
-
-const SearchIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-5 text-muted shrink-0">
-    <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
-  </svg>
-);
-const ArrowIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4 text-muted shrink-0">
-    <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.29 5.15a.75.75 0 111.02-1.1l5.5 5a.75.75 0 010 1.1l-5.5 5a.75.75 0 11-1.02-1.1l4.098-4.1H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-  </svg>
-);
-const CloseIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-5"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>
-);
 
 export const CommandPalette = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
@@ -44,7 +31,7 @@ export const CommandPalette = ({ onClose }: { onClose: () => void }) => {
       <button type="button" aria-label="Close search" onClick={onClose} className="absolute inset-0 bg-black/50" />
       <div role="dialog" aria-modal="true" className="relative bg-surface border border-border rounded-xl shadow-2xl w-full max-w-lg h-fit overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-          <SearchIcon />
+          <Search className="size-5 text-muted shrink-0" />
           <input
             autoFocus
             value={query}
@@ -54,7 +41,7 @@ export const CommandPalette = ({ onClose }: { onClose: () => void }) => {
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted focus:outline-none"
           />
           <button type="button" aria-label="Close" title="Close" onClick={onClose} className="text-muted hover:text-foreground">
-            <CloseIcon />
+            <X className="size-5" />
           </button>
         </div>
         <div className="py-2 max-h-80 overflow-y-auto">
@@ -69,7 +56,7 @@ export const CommandPalette = ({ onClose }: { onClose: () => void }) => {
                 onClick={() => go(item.href)}
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-background text-left"
               >
-                <ArrowIcon />
+                <ArrowRight className="size-4 text-muted shrink-0" />
                 {item.label}
               </button>
             ))

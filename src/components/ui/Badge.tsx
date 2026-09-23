@@ -8,8 +8,12 @@ const TONE_CLASSES: Record<Tone, string> = {
   info: "bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300",
 };
 
+// `capitalize` (CSS text-transform, not string mutation) covers every caller that
+// passes a raw lowercase backend value straight through (kit status, priority,
+// edit-state) without each call site needing to remember to format it — a badge
+// whose content already starts uppercase (e.g. "Fully covered") is unaffected.
 export const Badge = ({ tone = "neutral", children }: { tone?: Tone; children: React.ReactNode }) => (
-  <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full ${TONE_CLASSES[tone]}`}>
+  <span className={`inline-flex items-center capitalize text-xs font-medium px-2.5 py-1 rounded-full ${TONE_CLASSES[tone]}`}>
     {children}
   </span>
 );

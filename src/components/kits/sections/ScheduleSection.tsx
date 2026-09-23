@@ -11,7 +11,15 @@ export const ScheduleSection = ({ kitId, schedule }: { kitId: string; schedule: 
 
   return (
     <Card className="p-6">
-      <SectionHeading action={<RegenerateButton onClick={() => regenerateSchedule(kitId)} isLoading={isLoading} />}>
+      <SectionHeading
+        action={
+          <RegenerateButton
+            onClick={() => regenerateSchedule(kitId)}
+            isLoading={isLoading}
+            confirmMessage="This recomputes the whole schedule from the current questions. Continue?"
+          />
+        }
+      >
         Study schedule ({schedule.days_available} day{schedule.days_available !== 1 ? "s" : ""})
       </SectionHeading>
       <ol className="flex flex-col gap-3">

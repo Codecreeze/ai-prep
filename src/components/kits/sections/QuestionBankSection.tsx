@@ -5,6 +5,7 @@ import type { KitEditState } from "@/server/builder/editState";
 import { useRegenerateQuestionsCategoryMutation, useReorderQuestionsMutation } from "@/lib/api/kitsApi";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { SectionHeading } from "./SectionHeading";
 import { QuestionItem } from "./QuestionItem";
 import { AddQuestionForm } from "./AddQuestionForm";
@@ -42,20 +43,25 @@ const CategoryGroup = ({
     <div className="mb-6 last:mb-0">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold text-muted uppercase tracking-wide">{category.replace("-", " ")}</h3>
-        <RegenerateButton onClick={() => regenerate({ id: kitId, category })} isLoading={isLoading} />
+        <RegenerateButton
+          onClick={() => regenerate({ id: kitId, category })}
+          isLoading={isLoading}
+          confirmMessage="This replaces any generated (non-edited, non-pinned) questions in this category. Continue?"
+        />
       </div>
       <ul className="flex flex-col gap-4 mb-3">
         {questions.map((q, i) => (
-          <QuestionItem
-            key={q.id}
-            kitId={kitId}
-            question={q}
-            editState={editState.questions[q.id]}
-            canMoveUp={i > 0}
-            canMoveDown={i < questions.length - 1}
-            onMoveUp={() => moveTo(i, i - 1)}
-            onMoveDown={() => moveTo(i, i + 1)}
-          />
+          <ErrorBoundary key={q.id}>
+            <QuestionItem
+              kitId={kitId}
+              question={q}
+              editState={editState.questions[q.id]}
+              canMoveUp={i > 0}
+              canMoveDown={i < questions.length - 1}
+              onMoveUp={() => moveTo(i, i - 1)}
+              onMoveDown={() => moveTo(i, i + 1)}
+            />
+          </ErrorBoundary>
         ))}
       </ul>
       <AddQuestionForm kitId={kitId} category={category} requirements={requirements} />
@@ -94,14 +100,15 @@ export const QuestionBankSection = ({
         Question bank
       </SectionHeading>
       {presentCategories.map((category) => (
-        <CategoryGroup
-          key={category}
-          kitId={kitId}
-          category={category}
-          questions={groups[category]}
-          editState={editState}
-          requirements={requirements}
-        />
+        <ErrorBoundary key={category}>
+          <CategoryGroup
+            kitId={kitId}
+            category={category}
+            questions={groups[category]}
+            editState={editState}
+            requirements={requirements}
+          />
+        </ErrorBoundary>
       ))}
     </Card>
   );

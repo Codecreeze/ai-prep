@@ -7,6 +7,7 @@ import { useDebounce } from "@/lib/useDebounce";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { LoadingState } from "@/components/ui/LoadingState";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Pagination } from "@/components/ui/Pagination";
 import { KitsSearchBar } from "./KitsSearchBar";
@@ -79,20 +80,30 @@ export const KitsTable = () => {
                 <tbody className={isFetching ? "opacity-50 transition-opacity" : "transition-opacity"}>
                   {kits.map((kit) => {
                     const label = kit.kit?.source?.role || "this kit";
+                    const companyName = kit.kit?.source?.company;
                     return (
-                      <tr key={kit._id} className="border-b border-border last:border-0 hover:bg-background">
-                        <td className="px-4 py-3">
-                          <Link href={`/dashboard/kits/${kit._id}`} className="font-medium text-foreground hover:text-primary">
-                            {kit.kit?.source?.role || "Generating..."}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-3 text-muted">{kit.kit?.source?.company || kit.input.companyUrl}</td>
-                        <td className="px-4 py-3"><Badge tone={STATUS_TONE[kit.status]}>{kit.status}</Badge></td>
-                        <td className="px-4 py-3 text-muted">{formatDate(kit.createdAt)}</td>
-                        <td className="px-4 py-3 text-right">
-                          <KitRowActions kitId={kit._id} status={kit.status} onDelete={() => setPendingDelete({ id: kit._id, label })} />
-                        </td>
-                      </tr>
+                      <ErrorBoundary
+                        key={kit._id}
+                        fallback={
+                          <tr>
+                            <td colSpan={5} className="px-4 py-3 text-sm text-muted text-center">Whoops! Something went wrong.</td>
+                          </tr>
+                        }
+                      >
+                        <tr className="border-b border-border last:border-0 hover:bg-background">
+                          <td className="px-4 py-3">
+                            <Link href={`/dashboard/kits/${kit._id}`} className="font-medium text-foreground hover:text-primary">
+                              {kit.kit?.source?.role || "Generating..."}
+                            </Link>
+                          </td>
+                          <td className={`px-4 py-3 text-muted ${companyName ? "capitalize" : ""}`}>{companyName || kit.input.companyUrl}</td>
+                          <td className="px-4 py-3"><Badge tone={STATUS_TONE[kit.status]}>{kit.status}</Badge></td>
+                          <td className="px-4 py-3 text-muted">{formatDate(kit.createdAt)}</td>
+                          <td className="px-4 py-3 text-right">
+                            <KitRowActions kitId={kit._id} status={kit.status} onDelete={() => setPendingDelete({ id: kit._id, label })} />
+                          </td>
+                        </tr>
+                      </ErrorBoundary>
                     );
                   })}
                 </tbody>

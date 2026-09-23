@@ -1,13 +1,7 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { paginationRange } from "@/lib/paginationRange";
 
 type PaginationProps = { page: number; totalPages: number; total: number; pageSize: number; onPageChange: (page: number) => void };
-
-const ChevronLeft = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4"><path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" /></svg>
-);
-const ChevronRight = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
-);
 
 export const Pagination = ({ page, totalPages, total, pageSize, onPageChange }: PaginationProps) => {
   if (totalPages <= 1) return null;
@@ -29,7 +23,7 @@ export const Pagination = ({ page, totalPages, total, pageSize, onPageChange }: 
           aria-label="Previous page"
           className="size-8 grid place-items-center text-muted hover:bg-background disabled:opacity-30 disabled:hover:bg-transparent"
         >
-          <ChevronLeft />
+          <ChevronLeft className="size-4" />
         </button>
         {paginationRange(page, totalPages).map((token, i) =>
           token === "ellipsis" ? (
@@ -55,7 +49,7 @@ export const Pagination = ({ page, totalPages, total, pageSize, onPageChange }: 
           aria-label="Next page"
           className="size-8 grid place-items-center text-muted hover:bg-background disabled:opacity-30 disabled:hover:bg-transparent"
         >
-          <ChevronRight />
+          <ChevronRight className="size-4" />
         </button>
       </div>
     </div>

@@ -10,7 +10,10 @@ import {
   usePinQuestionMutation,
   useUnpinQuestionMutation,
 } from "@/lib/api/kitsApi";
+import { capitalizeWords } from "@/lib/formatLabel";
 import { IconButton } from "@/components/ui/IconButton";
+import { PinButton } from "@/components/ui/PinButton";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { TextAreaField } from "@/components/ui/TextAreaField";
 import { Button } from "@/components/ui/Button";
 import { EditStateBadge } from "./EditStateBadge";
@@ -29,6 +32,7 @@ type QuestionItemProps = {
 
 export const QuestionItem = ({ kitId, question, editState, onMoveUp, onMoveDown, canMoveUp, canMoveDown }: QuestionItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [prompt, setPrompt] = useState(question.prompt);
   const [answerOutline, setAnswerOutline] = useState(question.answer_outline);
 
@@ -70,18 +74,21 @@ export const QuestionItem = ({ kitId, question, editState, onMoveUp, onMoveDown,
     <li className="text-sm border-l-2 border-primary/30 pl-4">
       <div className="flex items-start justify-between gap-3">
         <p className="font-medium text-foreground">{question.prompt}</p>
-        <EditStateBadge state={editState} />
+        <div className="flex items-center gap-1 shrink-0">
+          <EditStateBadge state={editState} />
+          <PinButton
+            inline
+            pinned={editState === "pinned"}
+            onClick={() => (editState === "pinned" ? unpinQuestion({ id: kitId, qid: question.id }) : pinQuestion({ id: kitId, qid: question.id }))}
+          />
+        </div>
       </div>
       <p className="text-muted mt-1.5 leading-relaxed">{question.answer_outline}</p>
       <div className="flex flex-wrap items-center gap-1 mt-2">
         <IconButton label="Move up" onClick={onMoveUp} disabled={!canMoveUp} />
         <IconButton label="Move down" onClick={onMoveDown} disabled={!canMoveDown} />
         <IconButton label="Edit" onClick={() => setIsEditing(true)} />
-        <IconButton label="Delete" onClick={() => deleteQuestion({ id: kitId, qid: question.id })} />
-        <IconButton
-          label={editState === "pinned" ? "Unpin" : "Pin"}
-          onClick={() => (editState === "pinned" ? unpinQuestion({ id: kitId, qid: question.id }) : pinQuestion({ id: kitId, qid: question.id }))}
-        />
+        <IconButton label="Delete" onClick={() => setConfirmingDelete(true)} />
         <select
           value={question.category}
           onChange={(e) => moveQuestion({ id: kitId, qid: question.id, toCategory: e.target.value as Question["category"] })}
@@ -89,10 +96,24 @@ export const QuestionItem = ({ kitId, question, editState, onMoveUp, onMoveDown,
           className="text-xs border border-border rounded px-1.5 py-0.5 bg-surface text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           {CATEGORIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
+            <option key={c} value={c}>{capitalizeWords(c)}</option>
           ))}
         </select>
       </div>
+
+      {confirmingDelete && (
+        <ConfirmDialog
+          title="Delete question?"
+          message="This removes the question and its answer outline from the kit. This can't be undone."
+          confirmLabel="Delete"
+          danger
+          onConfirm={() => {
+            setConfirmingDelete(false);
+            deleteQuestion({ id: kitId, qid: question.id });
+          }}
+          onCancel={() => setConfirmingDelete(false)}
+        />
+      )}
     </li>
   );
 };

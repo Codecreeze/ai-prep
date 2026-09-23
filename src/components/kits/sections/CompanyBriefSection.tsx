@@ -8,6 +8,8 @@ import { Card } from "@/components/ui/Card";
 import { TextAreaField } from "@/components/ui/TextAreaField";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
+import { PinButton } from "@/components/ui/PinButton";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { SectionHeading } from "./SectionHeading";
 import { EditStateBadge } from "./EditStateBadge";
 import { RegenerateButton } from "./RegenerateButton";
@@ -28,6 +30,7 @@ export const CompanyBriefSection = ({
   const [isEditing, setIsEditing] = useState(false);
   const [whatTheyDo, setWhatTheyDo] = useState(brief.what_they_do);
   const [summary, setSummary] = useState(brief.summary);
+  const [confirmingOverwrite, setConfirmingOverwrite] = useState(false);
 
   const [editBrief, { isLoading: isSaving }] = useEditBriefMutation();
   const [pinBrief] = usePinBriefMutation();
@@ -39,15 +42,15 @@ export const CompanyBriefSection = ({
     setIsEditing(false);
   };
 
+  // RegenerateButton already asked "regenerate?" once. If the brief is also
+  // manually edited, overwriting hand-written prose is a second, more destructive
+  // question — asked with our own ConfirmDialog, not a native window.confirm.
   const handleRegenerate = async () => {
     try {
       await regenerateBrief({ id: kitId }).unwrap();
     } catch (err) {
       const code = (err as ApiErrorShape)?.data?.error?.code;
-      if (code === "CONFIRMATION_REQUIRED") {
-        const confirmed = window.confirm("This brief has manual edits. Regenerate and overwrite them?");
-        if (confirmed) await regenerateBrief({ id: kitId, force: true }).unwrap();
-      }
+      if (code === "CONFIRMATION_REQUIRED") setConfirmingOverwrite(true);
     }
   };
 
@@ -57,12 +60,16 @@ export const CompanyBriefSection = ({
         action={
           <div className="flex items-center gap-2">
             <EditStateBadge state={editState} />
-            <IconButton label={editState === "pinned" ? "Unpin" : "Pin"} onClick={() => (editState === "pinned" ? unpinBrief(kitId) : pinBrief(kitId))} />
-            <RegenerateButton onClick={handleRegenerate} isLoading={isRegenerating} />
+            <RegenerateButton
+              onClick={handleRegenerate}
+              isLoading={isRegenerating}
+              confirmMessage="This replaces the company brief with a freshly generated one. Continue?"
+            />
+            <PinButton inline pinned={editState === "pinned"} onClick={() => (editState === "pinned" ? unpinBrief(kitId) : pinBrief(kitId))} />
           </div>
         }
       >
-        {source.company || "Company"}
+        <span className={source.company ? "capitalize" : ""}>{source.company || "Company"}</span>
       </SectionHeading>
 
       {isEditing ? (
@@ -84,6 +91,20 @@ export const CompanyBriefSection = ({
 
       {brief.sources.length > 0 && (
         <p className="text-xs text-muted mt-4 pt-4 border-t border-border truncate">Sources: {brief.sources.join(", ")}</p>
+      )}
+
+      {confirmingOverwrite && (
+        <ConfirmDialog
+          title="Overwrite your edits?"
+          message="This brief has manual edits. Regenerating replaces them with freshly generated content — your changes will be lost."
+          confirmLabel="Overwrite"
+          danger
+          onConfirm={() => {
+            setConfirmingOverwrite(false);
+            regenerateBrief({ id: kitId, force: true });
+          }}
+          onCancel={() => setConfirmingOverwrite(false)}
+        />
       )}
     </Card>
   );

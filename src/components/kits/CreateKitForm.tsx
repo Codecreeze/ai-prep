@@ -26,14 +26,12 @@ export const CreateKitForm = () => {
   const [days, setDays] = useState(5);
   const [fieldErrors, setFieldErrors] = useState<CreateKitFieldErrors>({});
   const [error, setError] = useState<string | null>(null);
-  const [justSubmitted, setJustSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setFieldErrors({});
-    setJustSubmitted(false);
 
     const parsed = createKitSchema.safeParse({ jd, companyUrl, days });
     if (!parsed.success) {
@@ -51,12 +49,14 @@ export const CreateKitForm = () => {
       if (elapsed < MIN_VISIBLE_LOADING_MS) await new Promise((r) => setTimeout(r, MIN_VISIBLE_LOADING_MS - elapsed));
       // Stay on this page — the user can keep creating kits while this one
       // generates in the background. KitCompletionWatcher + KitCompletionModal
-      // (mounted in the dashboard layout) pop up once it's ready or failed.
+      // (mounted in the dashboard layout) pop up once it's ready or failed. Success
+      // feedback is the toast fired by kitsApi's onQueryStarted (driven by RTK
+      // Query's own fulfilled state) — no separate "just submitted" message that
+      // would need a timer to clear itself.
       dispatch(watchKit(result.kitId));
       setJd("");
       setCompanyUrl("");
       setDays(5);
-      setJustSubmitted(true);
     } catch (err) {
       const message = (err as { data?: { error?: { message?: string } } })?.data?.error?.message;
       setError(message ?? "Couldn't create kit");
@@ -107,11 +107,6 @@ export const CreateKitForm = () => {
           </div>
         </div>
         {error && <ErrorText>{error}</ErrorText>}
-        {justSubmitted && !error && (
-          <p className="text-sm text-emerald-600 dark:text-emerald-400">
-            Added to your kits — generating now. We&apos;ll let you know when it&apos;s ready.
-          </p>
-        )}
         <Button type="submit" disabled={isSubmitting} className="self-start">
           {isSubmitting && <Spinner />}
           {isSubmitting ? "Starting..." : "Generate kit"}

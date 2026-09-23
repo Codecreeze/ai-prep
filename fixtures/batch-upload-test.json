@@ -1,0 +1,12 @@
+[
+  {
+    "jd": "Senior Backend Engineer\n\nWe are looking for a Senior Backend Engineer with 5+ years of experience with distributed systems and Go or Python. Experience mentoring junior engineers is required. Bonus points for Kubernetes experience.",
+    "company_url": "https://about.gitlab.com/",
+    "days": 5
+  },
+  {
+    "jd": "Product Engineer\n\n3+ years of experience with TypeScript and React required. Strong product sense and comfort talking to customers is a must. Bonus points for experience with analytics or data pipelines.",
+    "company_url": "https://posthog.com/",
+    "days": 7
+  }
+]

@@ -2,39 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BrainCircuit } from "lucide-react";
+import { BrainCircuit, Search, LayoutList, BarChart3, BookOpenCheck } from "lucide-react";
 import { useAppSelector } from "@/lib/hooks";
 
-const AnalyzeIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4.5 shrink-0">
-    <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
-  </svg>
-);
-
-const KitsIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4.5 shrink-0">
-    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 5a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V9zm0 5a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
-  </svg>
-);
-
-const AnalyticsIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4.5 shrink-0">
-    <path d="M3 13a1 1 0 011-1h1a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm5-6a1 1 0 011-1h1a1 1 0 011 1v10a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm5-4a1 1 0 011-1h1a1 1 0 011 1v14a1 1 0 01-1 1h-1a1 1 0 01-1-1V3z" />
-  </svg>
-);
-
-const PracticeIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" className="size-4.5 shrink-0">
-    <path d="M5.5 2A1.5 1.5 0 004 3.5v13A1.5 1.5 0 005.5 18h1.75a.75.75 0 000-1.5H5.5V3.5h9v13H12.75a.75.75 0 000 1.5h1.75a1.5 1.5 0 001.5-1.5v-13A1.5 1.5 0 0014.5 2h-9z" />
-    <path d="M8 7a.75.75 0 01.75-.75h2.5a.75.75 0 010 1.5h-2.5A.75.75 0 018 7zm0 3a.75.75 0 01.75-.75h2.5a.75.75 0 010 1.5h-2.5A.75.75 0 018 10zm.75 2.25a.75.75 0 000 1.5h2.5a.75.75 0 000-1.5h-2.5z" />
-  </svg>
-);
-
 const NAV_ITEMS = [
-  { href: "/dashboard/analyze", label: "Analyze", icon: AnalyzeIcon },
-  { href: "/dashboard/kits", label: "Kits", icon: KitsIcon },
-  { href: "/dashboard/analytics", label: "Analytics", icon: AnalyticsIcon },
-  { href: "/dashboard/practice", label: "Practice", icon: PracticeIcon },
+  { href: "/dashboard/analyze", label: "Analyze", icon: Search },
+  { href: "/dashboard/kits", label: "Kits", icon: LayoutList },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard/practice", label: "Practice", icon: BookOpenCheck },
 ];
 
 export const Sidebar = () => {
@@ -68,7 +43,7 @@ export const Sidebar = () => {
                     isActive ? "text-foreground bg-primary-soft" : "text-muted hover:text-foreground hover:bg-background"
                   }`}
                 >
-                  <Icon />
+                  <Icon className="size-4.5 shrink-0" />
                   {!collapsed && label}
                 </Link>
               </li>

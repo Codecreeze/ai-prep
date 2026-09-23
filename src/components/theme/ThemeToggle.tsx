@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Sun, Moon } from "lucide-react";
 import { applyTheme, isDarkActive } from "@/lib/theme";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -30,11 +31,7 @@ export const ThemeToggle = () => {
         suppressHydrationWarning
         className="size-8 grid place-items-center rounded-lg border border-border text-muted hover:text-foreground hover:bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        {isDark ? (
-          <svg viewBox="0 0 20 20" fill="currentColor" className="size-4"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.24 2.34a1 1 0 011.42 1.42l-.71.7a1 1 0 11-1.41-1.41l.7-.71zM18 9a1 1 0 110 2h-1a1 1 0 110-2h1zM4.34 4.34a1 1 0 011.41 1.41l-.7.71A1 1 0 013.63 5.05l.7-.71zM3 9a1 1 0 110 2H2a1 1 0 110-2h1zm1.34 6.66a1 1 0 011.41-1.41l-.7.7a1 1 0 01-1.42-1.41l.71-.7zM10 15a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm4.95.95a1 1 0 001.41-1.41l-.7-.71a1 1 0 10-1.42 1.42l.71.7zM10 6a4 4 0 100 8 4 4 0 000-8z" /></svg>
-        ) : (
-          <svg viewBox="0 0 20 20" fill="currentColor" className="size-4"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
-        )}
+        {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
       </button>
     </Tooltip>
   );

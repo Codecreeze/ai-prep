@@ -145,6 +145,11 @@ export const kitsApi = apiSlice.injectEndpoints({
       invalidatesTags: (_r, _e, { id }) => [kitTag(id)],
       onQueryStarted: notifySuccess("Flashcard pinned"),
     }),
+    unpinFlashcard: builder.mutation<{ kit: KitDetail }, { id: string; fid: string }>({
+      query: ({ id, fid }) => ({ url: `/kits/${id}/flashcards/${fid}/unpin`, method: "POST" }),
+      invalidatesTags: (_r, _e, { id }) => [kitTag(id)],
+      onQueryStarted: notifySuccess("Flashcard unpinned"),
+    }),
 
     // --- Schedule ---
     regenerateSchedule: builder.mutation<{ kit: KitDetail }, string>({
@@ -179,5 +184,6 @@ export const {
   useEditFlashcardMutation,
   useDeleteFlashcardMutation,
   usePinFlashcardMutation,
+  useUnpinFlashcardMutation,
   useRegenerateScheduleMutation,
 } = kitsApi;

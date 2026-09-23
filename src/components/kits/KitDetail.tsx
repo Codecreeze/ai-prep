@@ -11,6 +11,7 @@ import { FlashcardsSection } from "./sections/FlashcardsSection";
 import { ScheduleSection } from "./sections/ScheduleSection";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorText } from "@/components/ui/ErrorText";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 export const KitDetail = ({ id }: { id: string }) => {
   // Static interval, single subscription — the simplest reliable RTK Query polling
@@ -39,17 +40,27 @@ export const KitDetail = ({ id }: { id: string }) => {
       <KitProgressBanner status={status} />
       {kit && (
         <>
-          <CompanyBriefSection kitId={id} source={kit.source} brief={kit.company_brief} editState={resolvedEditState.brief} />
-          <RoleSection role={kit.role} />
-          <QuestionBankSection
-            kitId={id}
-            questions={kit.questions}
-            coverage={kit.coverage}
-            editState={resolvedEditState}
-            requirements={kit.role.requirements}
-          />
-          <FlashcardsSection kitId={id} flashcards={kit.flashcards} editState={resolvedEditState} />
-          <ScheduleSection kitId={id} schedule={kit.schedule} />
+          <ErrorBoundary>
+            <CompanyBriefSection kitId={id} source={kit.source} brief={kit.company_brief} editState={resolvedEditState.brief} />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <RoleSection role={kit.role} />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <QuestionBankSection
+              kitId={id}
+              questions={kit.questions}
+              coverage={kit.coverage}
+              editState={resolvedEditState}
+              requirements={kit.role.requirements}
+            />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <FlashcardsSection kitId={id} flashcards={kit.flashcards} editState={resolvedEditState} />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <ScheduleSection kitId={id} schedule={kit.schedule} />
+          </ErrorBoundary>
         </>
       )}
     </div>

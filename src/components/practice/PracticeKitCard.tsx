@@ -11,12 +11,13 @@ const scoreTone = (score: number) => (score >= 80 ? "text-emerald-600" : score >
 // document up front just to show a number on a hub page.
 export const PracticeKitCard = ({ kit }: { kit: KitSummary }) => {
   const { data } = useGetReadinessScoreQuery(kit._id);
+  const companyName = kit.kit?.source?.company;
 
   return (
     <Card className="p-5 flex items-center justify-between gap-4">
       <div className="min-w-0">
         <p className="font-medium text-foreground truncate">{kit.kit?.source?.role || "Untitled role"}</p>
-        <p className="text-sm text-muted truncate">{kit.kit?.source?.company || kit.input.companyUrl}</p>
+        <p className={`text-sm text-muted truncate ${companyName ? "capitalize" : ""}`}>{companyName || kit.input.companyUrl}</p>
       </div>
       <div className="flex items-center gap-4 shrink-0">
         {data && <span className={`text-lg font-bold ${scoreTone(data.overall)}`}>{data.overall}%</span>}
