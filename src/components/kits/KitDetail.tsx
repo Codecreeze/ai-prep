@@ -2,13 +2,14 @@
 
 import { useGetKitQuery } from "@/lib/api/kitsApi";
 import { emptyEditState } from "@/server/builder/editState";
+import { KitDetailHeader } from "./KitDetailHeader";
 import { KitProgressBanner } from "./KitProgressBanner";
 import { CompanyBriefSection } from "./sections/CompanyBriefSection";
 import { RoleSection } from "./sections/RoleSection";
 import { QuestionBankSection } from "./sections/QuestionBankSection";
 import { FlashcardsSection } from "./sections/FlashcardsSection";
 import { ScheduleSection } from "./sections/ScheduleSection";
-import { Spinner } from "@/components/ui/Spinner";
+import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorText } from "@/components/ui/ErrorText";
 
 export const KitDetail = ({ id }: { id: string }) => {
@@ -22,13 +23,7 @@ export const KitDetail = ({ id }: { id: string }) => {
   // Builder edits use their own mutations/cache invalidation, unaffected by this).
   const { data, isLoading, isError } = useGetKitQuery(id, { pollingInterval: 4000 });
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center gap-2 text-muted text-sm py-10">
-        <Spinner /> Loading kit...
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingState />;
   if (isError || !data) return <ErrorText>Couldn&apos;t load this kit.</ErrorText>;
 
   const { status, kit, editState } = data.kit;
@@ -39,7 +34,8 @@ export const KitDetail = ({ id }: { id: string }) => {
   const resolvedEditState = { ...emptyEditState(), ...editState };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div>
+      <KitDetailHeader kitId={id} status={status} source={kit?.source} />
       <KitProgressBanner status={status} />
       {kit && (
         <>

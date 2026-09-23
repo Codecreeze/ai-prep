@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-const HomePage = () => redirect("/kits");
+const HomePage = () => redirect("/dashboard/analyze");
 
 export default HomePage;

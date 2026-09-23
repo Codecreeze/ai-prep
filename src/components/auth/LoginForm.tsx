@@ -21,7 +21,7 @@ export const LoginForm = () => {
     setError(null);
     try {
       await login({ email, password }).unwrap();
-      router.push("/kits");
+      router.push("/dashboard/analyze");
     } catch (err) {
       const message = (err as { data?: { error?: { message?: string } } })?.data?.error?.message;
       setError(message ?? "Sign in failed");
