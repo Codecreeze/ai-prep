@@ -18,15 +18,20 @@ const kitDocSchema = new Schema({
   },
   dedupeHash: { type: String, required: true, index: true },
   kit: { type: Schema.Types.Mixed, default: null },
+  // Mongoose quirk: a plain object-literal `default: {}` on a Mixed-typed field is
+  // NOT reliably applied on document creation (confirmed by a real bug this caused —
+  // see devlog). A function default (`default: () => ({})`) is the documented fix:
+  // Mongoose always invokes function defaults per-document instead of special-casing
+  // empty-object literals away.
   editState: {
-    questions: { type: Schema.Types.Mixed, default: {} },
-    flashcards: { type: Schema.Types.Mixed, default: {} },
+    questions: { type: Schema.Types.Mixed, default: () => ({}) },
+    flashcards: { type: Schema.Types.Mixed, default: () => ({}) },
     brief: { type: String, default: "generated" },
     schedule: { type: String, default: "generated" },
   },
   practice: {
     coveredCardIds: { type: [String], default: [] },
-    confidence: { type: Schema.Types.Mixed, default: {} },
+    confidence: { type: Schema.Types.Mixed, default: () => ({}) },
     lastSessionAt: { type: Date, default: null },
   },
   createdAt: { type: Date, default: Date.now },

@@ -33,7 +33,7 @@ describe("validateKit", () => {
   });
 
   it("rejects a kit missing a required field", () => {
-    const { role, ...rest } = validKit;
+    const { role: _role, ...rest } = validKit;
     const result = validateKit(rest);
     expect(result.ok).toBe(false);
   });

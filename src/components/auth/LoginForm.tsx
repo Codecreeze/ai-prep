@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLoginMutation } from "@/lib/api/authApi";
+import { Button } from "@/components/ui/Button";
+import { TextField } from "@/components/ui/TextField";
+import { ErrorText } from "@/components/ui/ErrorText";
+import { Spinner } from "@/components/ui/Spinner";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -25,38 +29,34 @@ export const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm">
-      <h1 className="text-xl font-semibold">Sign in</h1>
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-gray-700">Email</span>
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-gray-700">Password</span>
-        <input
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </label>
-      {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="bg-blue-600 text-white rounded px-4 py-2 font-medium disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-      >
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full max-w-sm">
+      <div>
+        <h1 className="text-2xl font-semibold text-foreground">Welcome back</h1>
+        <p className="text-sm text-muted mt-1">Sign in to see your prep kits.</p>
+      </div>
+      <TextField
+        label="Email"
+        type="email"
+        required
+        autoComplete="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        required
+        autoComplete="current-password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      {error && <ErrorText>{error}</ErrorText>}
+      <Button type="submit" disabled={isLoading}>
+        {isLoading && <Spinner />}
         {isLoading ? "Signing in..." : "Sign in"}
-      </button>
-      <p className="text-sm text-gray-600">
-        No account? <Link href="/register" className="text-blue-600 underline">Register</Link>
+      </Button>
+      <p className="text-sm text-muted text-center">
+        No account? <Link href="/register" className="text-primary font-medium hover:underline">Register</Link>
       </p>
     </form>
   );

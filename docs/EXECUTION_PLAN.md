@@ -66,12 +66,38 @@ entirely against what Phase 1-4 produce. Done.
       promise bug in async generation (fixed with Next.js `after()`) — see devlog/10
 → **checkpoint: commit "auth + persistence + kit API routes"**
 
-### Phase 6 — Builder UI
-- [ ] Kit read view (brief, role, questions, flashcards, schedule)
+### Phase 6 — Builder UI (part 1 DONE: auth UI + read view; part 2 in progress)
+- [x] Redux Toolkit + RTK Query store, auth pages (login/register), dashboard
+      server-side auth gate — live browser-tested
+- [x] Kit create form, kit list (self-polling), kit read view (brief, role,
+      questions grouped by category, flashcards, schedule) with progress banner
+- [x] Full flow live-tested in browser end-to-end against real Gemini + MongoDB:
+      register → login → create kit → watch progress → view complete, correct,
+      high-quality kit content (see devlog/11, devlog/12)
+- [x] Found and fixed a real polling bug during live testing (RTK Query's
+      `skipPollingIfUnfocused` silently disabled all polling in the test browser)
 - [ ] Edit/reorder/move-category/add/delete + generated/edited/pinned state model
 - [ ] Regenerate-section endpoints + UI, verified edits survive
-- [ ] Loading/empty/error states throughout
-→ **checkpoint: commit "Builder UI with edit-preserving regeneration"**
+- [ ] Loading/empty/error states audit (have the basics; need a dedicated pass)
+→ **checkpoint: commit "Builder UI part 1 — auth, dashboard, kit read view, live-verified"**
+
+### Phase 6 part 2 — Builder editing (DONE)
+- [x] generated/edited/pinned state model + all mutation logic as pure, tested
+      functions (questions, flashcards, brief) — 15 new unit tests, 61 total
+- [x] regenerateQuestionsCategory: the edit-preserving regeneration algorithm,
+      tested with a mocked LLM (deterministic, no live-API flakiness in the test)
+- [x] Edit/delete/add/pin/move-category for questions; edit/delete/add/pin for
+      flashcards; edit/pin for brief — API routes + interactive UI, all wired
+- [x] Regenerate: brief (with force-confirmation for edited), each question
+      category (edit-preserving), schedule (pure recompute)
+- [x] Found and fixed a real Mongoose bug during live testing (Mixed-field
+      object-literal defaults silently not applied — broke the entire Builder on
+      first render) — see devlog/16
+- [x] Live-verified in browser: edited a real question, regenerated its category,
+      confirmed the edit survived with content and "edited" badge intact
+- [ ] Known gap: reorder-within-category has a tested backend function but no
+      drag/reorder UI control yet — tracked for the Phase 7 pass
+→ **checkpoint: commit "Builder editing — generated/edited/pinned state model, live-verified"**
 
 ### Phase 7 — Practice mode + edge cases + creative feature
 - [ ] Flashcard stepper, confidence capture, coverage view, weak-spot ordering
