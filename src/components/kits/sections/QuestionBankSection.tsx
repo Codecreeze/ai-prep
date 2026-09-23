@@ -2,7 +2,7 @@
 
 import type { Kit, Question } from "@/server/validation/kitSchema";
 import type { KitEditState } from "@/server/builder/editState";
-import { useRegenerateQuestionsCategoryMutation } from "@/lib/api/kitsApi";
+import { useRegenerateQuestionsCategoryMutation, useReorderQuestionsMutation } from "@/lib/api/kitsApi";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { SectionHeading } from "./SectionHeading";
@@ -30,6 +30,13 @@ const CategoryGroup = ({
   requirements: Kit["role"]["requirements"];
 }) => {
   const [regenerate, { isLoading }] = useRegenerateQuestionsCategoryMutation();
+  const [reorderQuestions] = useReorderQuestionsMutation();
+
+  const moveTo = (fromIndex: number, toIndex: number) => {
+    const orderedIds = questions.map((q) => q.id);
+    [orderedIds[fromIndex], orderedIds[toIndex]] = [orderedIds[toIndex], orderedIds[fromIndex]];
+    reorderQuestions({ id: kitId, category, orderedIds });
+  };
 
   return (
     <div className="mb-6 last:mb-0">
@@ -38,8 +45,17 @@ const CategoryGroup = ({
         <RegenerateButton onClick={() => regenerate({ id: kitId, category })} isLoading={isLoading} />
       </div>
       <ul className="flex flex-col gap-4 mb-3">
-        {questions.map((q) => (
-          <QuestionItem key={q.id} kitId={kitId} question={q} editState={editState.questions[q.id]} />
+        {questions.map((q, i) => (
+          <QuestionItem
+            key={q.id}
+            kitId={kitId}
+            question={q}
+            editState={editState.questions[q.id]}
+            canMoveUp={i > 0}
+            canMoveDown={i < questions.length - 1}
+            onMoveUp={() => moveTo(i, i - 1)}
+            onMoveDown={() => moveTo(i, i + 1)}
+          />
         ))}
       </ul>
       <AddQuestionForm kitId={kitId} category={category} requirements={requirements} />

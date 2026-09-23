@@ -17,7 +17,17 @@ import { EditStateBadge } from "./EditStateBadge";
 
 const CATEGORIES: Question["category"][] = ["technical", "behavioural", "system-design", "company-fit"];
 
-export const QuestionItem = ({ kitId, question, editState }: { kitId: string; question: Question; editState: EditState | undefined }) => {
+type QuestionItemProps = {
+  kitId: string;
+  question: Question;
+  editState: EditState | undefined;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+};
+
+export const QuestionItem = ({ kitId, question, editState, onMoveUp, onMoveDown, canMoveUp, canMoveDown }: QuestionItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [prompt, setPrompt] = useState(question.prompt);
   const [answerOutline, setAnswerOutline] = useState(question.answer_outline);
@@ -64,6 +74,8 @@ export const QuestionItem = ({ kitId, question, editState }: { kitId: string; qu
       </div>
       <p className="text-muted mt-1.5 leading-relaxed">{question.answer_outline}</p>
       <div className="flex flex-wrap items-center gap-1 mt-2">
+        <IconButton label="Move up" onClick={onMoveUp} disabled={!canMoveUp} />
+        <IconButton label="Move down" onClick={onMoveDown} disabled={!canMoveDown} />
         <IconButton label="Edit" onClick={() => setIsEditing(true)} />
         <IconButton label="Delete" onClick={() => deleteQuestion({ id: kitId, qid: question.id })} />
         <IconButton

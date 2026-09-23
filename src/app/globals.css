@@ -1,44 +1,100 @@
 @import "tailwindcss";
 
-/* Design tokens: a small, deliberate palette (indigo primary, slate neutrals) used
+/* Design tokens: a small, deliberate palette (teal primary, slate neutrals) used
    consistently across every component instead of Tailwind's full default palette
-   ad hoc — keeps the UI reading as one system rather than a pile of demo screens. */
+   ad hoc — keeps the UI reading as one system rather than a pile of demo screens.
+   Light is the default; dark applies either from the OS preference or an explicit
+   [data-theme] override set by ThemeToggle (see components/theme/ThemeToggle.tsx). */
 :root {
   --background: #f8fafc; /* slate-50 */
   --surface: #ffffff;
+  --sidebar: #ffffff;
   --foreground: #0f172a; /* slate-900 */
   --muted: #64748b; /* slate-500 */
   --border: #e2e8f0; /* slate-200 */
-  --primary: #4f46e5; /* indigo-600 */
-  --primary-hover: #4338ca; /* indigo-700 */
+  --primary: #0d9488; /* teal-600 */
+  --primary-hover: #0f766e; /* teal-700 */
+  --primary-soft: #f0fdfa; /* teal-50 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-sidebar: var(--sidebar);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1120;
-    --surface: #131c31;
+  :root:not([data-theme="light"]) {
+    --background: #0a0f1a;
+    --surface: #111827;
+    --sidebar: #0d1420;
     --foreground: #e2e8f0;
     --muted: #94a3b8;
-    --border: #1e293b;
-    --primary: #6366f1;
-    --primary-hover: #818cf8;
+    --border: #1f2937;
+    --primary: #2dd4bf; /* teal-400 — lighter for contrast on dark surfaces */
+    --primary-hover: #5eead4;
+    --primary-soft: #134e4a;
   }
+}
+
+:root[data-theme="dark"] {
+  --background: #0a0f1a;
+  --surface: #111827;
+  --sidebar: #0d1420;
+  --foreground: #e2e8f0;
+  --muted: #94a3b8;
+  --border: #1f2937;
+  --primary: #2dd4bf;
+  --primary-hover: #5eead4;
+  --primary-soft: #134e4a;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Every native interactive element gets an explicit pointer cursor — some browser/
+   Tailwind-reset combinations leave <button> at the default arrow cursor otherwise. */
+button:not(:disabled),
+a,
+[role="button"],
+select {
+  cursor: pointer;
+}
+
+/* Used by MobileNav's drawer (Tailwind arbitrary animate-[...] classes need a
+   matching @keyframes definition — these aren't in Tailwind's default set). */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Sonner's close button defaults to floating half-outside the toast's top-left
+   corner. We want it fully inside the toast, vertically centered at the right
+   edge — overriding the actual position properties (not just Sonner's own CSS
+   variables) with !important, since its injected <style> tag can land after
+   ours in the DOM and would otherwise win on source order alone. Extra right
+   padding on the toast content keeps the message text from running under it. */
+[data-sonner-toast][data-styled='true'] [data-close-button] {
+  left: unset !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+[data-sonner-toast][data-styled='true'] {
+  padding-right: 34px !important;
 }

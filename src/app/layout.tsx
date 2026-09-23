@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,8 +20,12 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: LayoutProps<"/">) => (
-  <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-    <body className="min-h-full flex flex-col">
+  <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
+    <head>
+      {/* Runs before paint so the stored theme is applied before React hydrates — avoids a light-then-dark flash. */}
+      <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+    </head>
+    <body className="h-full flex flex-col overflow-hidden">
       <Providers>{children}</Providers>
     </body>
   </html>
