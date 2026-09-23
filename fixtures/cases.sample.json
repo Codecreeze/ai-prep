@@ -16,5 +16,17 @@
     "jd": "Frontend Engineer with 3+ years of React experience required.",
     "company_url": "http://localhost:1/nonexistent",
     "days": 5
+  },
+  {
+    "id": "case-04-one-day-schedule",
+    "jd": "Backend Engineer\n\n3+ years of Python experience required.",
+    "company_url": "http://localhost:8099/acme/",
+    "days": 1
+  },
+  {
+    "id": "case-05-sixty-day-schedule",
+    "jd": "Backend Engineer\n\n3+ years of Go experience required.",
+    "company_url": "http://localhost:8099/acme/",
+    "days": 60
   }
 ]

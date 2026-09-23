@@ -44,15 +44,43 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ kitId: doc._id.toString(), status: "pending" }, { status: 202 });
 }
 
-export async function GET() {
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 50; // hard cap so a crafted ?limit= can't force an unbounded scan
+
+export async function GET(req: NextRequest) {
   const auth = await requireUser();
   if ("error" in auth) return auth.error;
 
   await connectDb();
-  const kits = await Kit.find({ userId: auth.user.userId })
-    .select("status input.companyUrl kit.source.role kit.source.company createdAt")
-    .sort({ createdAt: -1 })
-    .lean();
+  const params = req.nextUrl.searchParams;
+  const page = Math.max(1, Number(params.get("page")) || 1);
+  const limit = Math.min(MAX_PAGE_SIZE, Math.max(1, Number(params.get("limit")) || DEFAULT_PAGE_SIZE));
+  const q = params.get("q")?.trim();
+  const status = params.get("status")?.trim();
 
-  return NextResponse.json({ kits });
+  // Search runs server-side (not just client-side filtering of one fetched page) so
+  // it works correctly across the full, paginated result set, not just whatever
+  // page happens to be loaded — a regex on the nested Mixed-typed source fields
+  // still works fine since MongoDB queries by document structure, not schema type.
+  const filter: Record<string, unknown> = { userId: auth.user.userId };
+  if (q) {
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // treat user input as a literal substring, not a regex
+    filter.$or = [{ "kit.source.role": new RegExp(escaped, "i") }, { "kit.source.company": new RegExp(escaped, "i") }];
+  }
+  // Used by the Practice hub, which only ever wants "ready" kits — filtering
+  // server-side keeps its pagination totals correct instead of paginating over an
+  // already-filtered client-side slice.
+  if (status === "pending" || status === "ready" || status === "failed") filter.status = status;
+
+  const [kits, total] = await Promise.all([
+    Kit.find(filter)
+      .select("status input.companyUrl kit.source.role kit.source.company createdAt")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean(),
+    Kit.countDocuments(filter),
+  ]);
+
+  return NextResponse.json({ kits, total, page, limit });
 }

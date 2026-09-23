@@ -99,12 +99,20 @@ entirely against what Phase 1-4 produce. Done.
       drag/reorder UI control yet — tracked for the Phase 7 pass
 → **checkpoint: commit "Builder editing — generated/edited/pinned state model, live-verified"**
 
-### Phase 7 — Practice mode + edge cases + creative feature
-- [ ] Flashcard stepper, confidence capture, coverage view, weak-spot ordering
-- [ ] Edge-case verification pass (thin JD, no hiring page, dead URL, duplicate
-      submission, 1-day/60-day schedule)
-- [ ] Optional creative feature if time remains
-→ **checkpoint: commit "practice mode + edge-case handling"**
+### Phase 7 — Practice mode + edge cases + creative feature (mostly DONE)
+- [x] Reorder-within-category UI (closed the Phase 6 gap) — live-verified
+- [x] Flashcard stepper, confidence capture, coverage view, weak-spot-first
+      ordering (confidence-weighted, defended in devlog/18) — live-verified
+      end to end, data persists correctly
+- [x] Edge-case verification pass — all 8 brief-listed edge cases confirmed with
+      evidence (unit tests + live runs); 1-day/60-day now also verified through
+      the real pipeline via the batch CLI (5/5 cases ok, 2m22s, all schema-valid)
+- [x] Optional creative feature: **Readiness Score** — a weighted synthesis of
+      coverage + practice confidence per requirement/overall, not a bolt-on
+      display of existing data. 7 new unit tests; live-verified with real data
+      showing correctly nuanced partial-practice scoring (devlog/20)
+→ **checkpoint: commit "practice mode + reorder UI + edge-case verification + readiness score"**
+Phase 7 is now fully done — moving to Phase 8 (deploy + README + video) next.
 
 ### Phase 8 — Deploy + submission package
 - [ ] Deploy to Vercel + MongoDB Atlas, verify prod env vars, `ALLOW_LOCAL_URLS=false`
