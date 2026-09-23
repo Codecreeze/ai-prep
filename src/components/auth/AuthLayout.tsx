@@ -11,7 +11,7 @@ export const AuthLayout = ({ children }: { children: React.ReactNode }) => (
           schedule — built from the actual job posting and company site.
         </p>
       </div>
-      <p className="text-teal-200 text-xs">Built for the Trao engineering assessment</p>
+      <p className="text-teal-200 text-xs">AI-assisted research, structured for how you actually prepare.</p>
     </div>
     <div className="flex items-center justify-center p-6 sm:p-10">{children}</div>
   </div>
