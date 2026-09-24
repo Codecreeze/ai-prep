@@ -358,6 +358,21 @@ the weakest-covered requirements, not just a raw percentage.
   `{ jd, company_url, days }` pairs — the same shape the batch `evaluate` CLI's
   `cases.json` uses — and queues each one as its own kit, sequentially (so it
   doesn't burst the LLM rate limiter with N simultaneous generations).
+- **Known limitation — a Netlify-injected HTML comment triggers a cosmetic React
+  hydration warning in production only.** The deployed site (not local dev, not a
+  local production build) shows a React error #418 in the console on every page.
+  Diagnosed by fetching the raw deployed HTML directly: Netlify's edge injects an
+  HTML comment of its own into `<head>` on every response (`<!-- This site is
+  hosted on Netlify... -->`, part of an "ai-legible" site-info feature, confirmed
+  unrelated to Netlify's separate dev-tools HUD widget, which was disabled
+  separately and didn't change this). Next.js's App Router relies on precisely
+  positioned HTML comments as its own internal hydration/streaming boundary
+  markers, so a third-party comment spliced into that stream throws off the
+  client's hydration match. This is platform-injected content the app's own code
+  has no control over — not a defect in this codebase. It's non-fatal: React
+  discards the mismatched content and re-renders client-side, and every
+  functional check (auth, API routes, per-user data isolation) passes correctly
+  on the deployed site regardless.
 
 ---
 
